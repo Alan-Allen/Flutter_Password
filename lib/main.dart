@@ -8,8 +8,7 @@ void main() async {
   DBHelper dbHelper = DBHelper();
   await dbHelper.initdb();
   await dbHelper.deleteAll();
-  KeyList keyList = KeyList(0, "1234");
-  await dbHelper.insert(keyList);
+  await dbHelper.insert("1234");
   runApp(const MyApp());
 }
 

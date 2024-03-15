@@ -28,12 +28,12 @@ class DBHelper {
     ''');
   }
 
-  Future<void> insert(KeyList keyList) async {
+  Future<void> insert(String key) async {
     try {
       var dbClient = await database;
       await dbClient?.transaction((txn) async {
         await txn.rawInsert('''
-          INSERT INTO keys(key) VALUES('${keyList.key}')
+          INSERT INTO keys(key) VALUES('$key')
         ''');
       });
     } catch (e) {
@@ -70,27 +70,29 @@ class DBHelper {
     try {
       var dbClient = await database;
       List<Map>? maps = (await dbClient?.query('keys'))?.cast<Map>();
-      List<KeyList> users = [];
+      List<KeyList> keys = [];
       if (maps!.isNotEmpty) {
         for (int i = 0; i < maps.length; i++) {
-          users.add(KeyList.fromMap(maps[i]));
+          keys.add(KeyList.fromMap(maps[i]));
         }
       }
-      return users;
+      return keys;
     } catch (e) {
       print('Error getting users: $e');
       return [];
     }
   }
 
-  Future<List<KeyList>> getKey(String key) async {
+  Future<List<KeyList>> getKey(String search) async {
     try {
       var dbClient = await database;
-      List<Map>? maps = (await dbClient?.query('users'))?.cast<Map>();
+      List<Map>? maps = (await dbClient?.query('keys'))?.cast<Map>();
       List<KeyList> keys = [];
       if (maps!.isNotEmpty) {
         for (int i = 0; i < maps.length; i++) {
-          if(maps[i]['key'] == key) {
+          if(maps[i]['key'] == search) {
+            keys.add(KeyList.fromMap(maps[i]));
+          } else if(maps[i]['id'] == search) {
             keys.add(KeyList.fromMap(maps[i]));
           }
         }

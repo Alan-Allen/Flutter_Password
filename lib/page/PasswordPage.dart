@@ -51,6 +51,7 @@ class _PasswordPageState extends State<PasswordPage> {
           IconButton(
               onPressed: () {
                 print('Refresh Button Pressed');
+                getKeysFromDB();
               },
               icon: const Icon(Icons.refresh),
           ),
@@ -81,35 +82,106 @@ class _PasswordPageState extends State<PasswordPage> {
                       ),
                     ),
                     const SizedBox(width: 20),
-                    _buildButton('Search', Colors.blue, () {
+                    _buildButton('Search', Colors.blue, () async {
                       print('Search Button Pressed');
+                      String search = _searchController.text;
+                      _searchController.clear();
+                      List<KeyList> keyList = await getKey(search);
+                      setState(() {
+                        keys = keyList;
+                      });
                     }),
                   ],
                 ),
               ),
               const SizedBox(width: 20),
               Expanded(
-                  child: ListView.builder(
-                    itemCount: keys.length,
-                    itemBuilder: (context, index) {
-                      if(index == 0) {
-                        return Column(
-                          children: [
-                            _buildHeader(titleList),
-                            _buildKeyRow(keys[index], context)
-                          ],
-                        );
-                      } else {
-                          return _buildKeyRow(keys[index], context);
-                      }
+                child: ListView.builder(
+                  itemCount: keys.length,
+                  itemBuilder: (context, index) {
+                    if(index == 0) {
+                      return Column(
+                        children: [
+                          _buildHeader(titleList),
+                          _buildKeyRow(keys[index], context)
+                        ],
+                      );
+                    } else {
+                        return _buildKeyRow(keys[index], context);
                     }
-                  ),
+                  }
+                ),
               ),
-          ],
-        )
-      ),
-    );
-  }
+              Center(
+                child: CustomButton(
+                  onPressed: () {
+                    print('Insert Button Pressed');
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Insert'),
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: _keyController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter Password',
+                                    label: const Text('Password'),
+                                    border: OutlineInputBorder(
+                                      borderSide: const BorderSide(width: 3),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              CustomButton(
+                                  onPressed: () {
+                                    print('Close Button Pressed');
+                                    Navigator.pop(context);
+                                  },
+                                  text: 'Close',
+                                  color: Colors.red,
+                                  textColor: Colors.white,
+                                  width: 15, height: 10
+                              ),
+                              CustomButton(
+                                  onPressed: () {
+                                    print('Insert Button Pressed');
+                                    String key = _keyController.text;
+                                    insert(key);
+                                    _keyController.clear();
+                                    Navigator.pop(context);
+                                    setState(() {
+                                      getKeysFromDB();
+                                    });
+                                  },
+                                  text: 'Insert',
+                                  color: Colors.blue,
+                                  textColor: Colors.white,
+                                  width: 15, height: 10
+                              ),
+                            ],
+                          );
+                        }
+
+                    );
+                  },
+                  text: 'Insert',
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  width: 30, height: 15,
+                ),
+              ),
+            ],
+          )
+        ),
+      );
+    }
 
   Widget _buildButton(String text, Color color, VoidCallback onPressed) {
     return CustomButton(
@@ -271,6 +343,24 @@ class _PasswordPageState extends State<PasswordPage> {
         ),
       );
   }
+}
+
+void insert(String key) async {
+  DBHelper dbHelper = DBHelper();
+  await dbHelper.initdb();
+  await dbHelper.insert(key);
+  print("Insert data: $key");
+}
+
+Future<List<KeyList>> getKey(String search) async {
+  DBHelper dbHelper = DBHelper();
+  await dbHelper.initdb();
+  List<KeyList> keys = await dbHelper.getKey(search);
+  print("get key data:");
+  for(var key in keys) {
+    print("ID: ${key.id}, key: ${key.key}");
+  }
+  return keys;
 }
 
 void geAll() async {
