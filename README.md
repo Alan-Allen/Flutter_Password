@@ -1,9 +1,20 @@
 # password
 
-A new Flutter project.
+Password Management System
 
-## Getting Started
+## UserFunction
 
-This project is a starting point for a Flutter application.
+1. Login 
+2. Sign Up
+3. Account Management
+4. Password Create(Random)
 
-A few resources to get you started if this is your first Flutter project:
+### Dart(Flutter)
+
+1. Sqlite(DBHelper)
+2. ListView
+3. Table
+4. TextField
+5. Button
+6. ShowDialog
+7. Random
