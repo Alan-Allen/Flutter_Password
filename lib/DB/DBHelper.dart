@@ -190,4 +190,19 @@ class DBHelper {
       print('Error update key: $e');
     }
   }
+
+  Future<void> updateUser(UserList userList) async {
+    try {
+      var dbClient = await database;
+      await dbClient?.transaction((txn) async {
+        await txn.rawUpdate('''
+          UPDATE users
+          SET name = ?, user = ?, pasword = ?
+          WHERE id = ?;
+        ''', [userList.name, userList.user, userList.password, userList.id]);
+      });
+    } catch (e) {
+      print('Error update key: $e');
+    }
+  }
 }

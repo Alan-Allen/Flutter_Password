@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:password/page/AccountPage.dart';
 import 'package:password/page/PasswordPage.dart';
 import 'package:password/page/RandomPage.dart';
 
@@ -13,7 +14,7 @@ final router = GoRouter(
       ),
       GoRoute(
         path: '/account',
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => AccountPage(),
       ),
       GoRoute(
         path: '/password',
