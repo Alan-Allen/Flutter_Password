@@ -116,11 +116,12 @@ class _PasswordPageState extends State<PasswordPage> {
                 child: CustomButton(
                   onPressed: () {
                     print('Insert Button Pressed');
+                    _keyController.clear();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Insert'),
+                            title: const Text('Insert'),
                             content: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
@@ -223,6 +224,7 @@ class _PasswordPageState extends State<PasswordPage> {
               child: CustomButton(
                 onPressed: () {
                   print('Setting Button Pressed');
+                  _keyController.clear();
                   _keyController.text = key.key;
                   showDialog(
                       context: context,
