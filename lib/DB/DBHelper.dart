@@ -5,6 +5,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'UserList.dart';
+
 class DBHelper {
   static Database? _db;
 
@@ -26,6 +28,14 @@ class DBHelper {
       id INTEGER PRIMARY KEY,
       key TEXT)
     ''');
+
+    await db.execute('''
+      CREATE TABLE users (
+      id INTEGER PRIMARY KEY,
+      name TEXT,
+      user TEXT,
+      password TEXT)
+    ''');
   }
 
   Future<void> insert(String key) async {
@@ -38,6 +48,19 @@ class DBHelper {
       });
     } catch (e) {
       print('Error inserting key: $e');
+    }
+  }
+
+  Future<void> insertUser(String name, String user, String password) async {
+    try {
+      var dbClient = await database;
+      await dbClient?.transaction((txn) async {
+        await txn.rawInsert('''
+          INSERT INTO users(name, user, password) VALUES('$name', '$user', '$password');
+        ''');
+      });
+    } catch (e) {
+      print('Error inserting user: $e');
     }
   }
 
@@ -54,11 +77,25 @@ class DBHelper {
     }
   }
 
+  Future<void> deleteUser(int id) async {
+    try {
+      var dbClient = await database;
+      await dbClient?.transaction((txn) async {
+        await txn.rawInsert('''
+          DELETE FROM users WHERE id = $id
+        ''');
+      });
+    } catch (e) {
+      print('Error delete key: $e');
+    }
+  }
+
   Future<void> deleteAll() async {
     try {
       var dbClient = await database;
       await dbClient?.transaction((txn) async {
         await txn.rawInsert('DELETE FROM keys');
+        await txn.rawInsert('DELETE FROM users');
       });
       print('All data clear successfully.');
     } catch (e) {
@@ -77,6 +114,23 @@ class DBHelper {
         }
       }
       return keys;
+    } catch (e) {
+      print('Error getting keys: $e');
+      return [];
+    }
+  }
+
+  Future<List<UserList>> getAllUser() async {
+    try {
+      var dbClient = await database;
+      List<Map>? maps = (await dbClient?.query('users'))?.cast<Map>();
+      List<UserList> users = [];
+      if (maps!.isNotEmpty) {
+        for (int i = 0; i < maps.length; i++) {
+          users.add(UserList.fromMap(maps[i]));
+        }
+      }
+      return users;
     } catch (e) {
       print('Error getting users: $e');
       return [];
@@ -98,6 +152,25 @@ class DBHelper {
         }
       }
       return keys;
+    } catch (e) {
+      print('Error getting keys: $e');
+      return [];
+    }
+  }
+
+  Future<List<UserList>> getUser(String search) async {
+    try {
+      var dbClient = await database;
+      List<Map>? maps = (await dbClient?.query('users'))?.cast<Map>();
+      List<UserList> users = [];
+      if (maps!.isNotEmpty) {
+        for (int i = 0; i < maps.length; i++) {
+          if(maps[i]['user'] == search) {
+            users.add(UserList.fromMap(maps[i]));
+          }
+        }
+      }
+      return users;
     } catch (e) {
       print('Error getting users: $e');
       return [];

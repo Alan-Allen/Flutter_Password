@@ -9,6 +9,7 @@ void main() async {
   await dbHelper.initdb();
   await dbHelper.deleteAll();
   await dbHelper.insert("1234");
+  await dbHelper.insertUser('Admin', 'admin', '1234');
   runApp(const MyApp());
 }
 

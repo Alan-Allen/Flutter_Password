@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:password/DB/DBHelper.dart';
 import 'package:password/component/Button.dart';
 
+import '../DB/UserList.dart';
 import '../routes/router.dart';
 
 class LoginPage extends StatelessWidget {
@@ -60,11 +62,14 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 30),
                 Center(
                   child: CustomButton(
-                    onPressed: () {
+                    onPressed: () async {
                       print('Login Button Pressed');
                       String userName = _usernameController.text;
                       String password = _passwordController.text;
-                      print('user: $userName, password: $password');
+                      _usernameController.clear();
+                      _passwordController.clear();
+                      bool login = await Login(userName, password);
+                      print('user: $userName, password: $password, Login?: $login');
                     },
                     text: 'Login',
                     color: Colors.blue,
@@ -122,5 +127,21 @@ class _PasswordFieldState extends State<PasswordField> {
         ),
       ),
     );
+  }
+}
+
+Future<bool> Login(String user, String password) async {
+  try {
+    DBHelper dbHelper = DBHelper();
+    await dbHelper.initdb();
+    List<UserList> users = await dbHelper.getUser(user);
+    print('User data: ');
+    for(var user in users) {
+      print('ID: ${user.id}, Name: ${user.name}, User: ${user.user}, Password: ${user.password}');
+    }
+    return users.isNotEmpty && users.first.password == password;
+  } catch (e) {
+    print("Error Login user: $e");
+    return false;
   }
 }
