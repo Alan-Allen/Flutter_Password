@@ -177,6 +177,25 @@ class DBHelper {
     }
   }
 
+  Future<List<UserList>> getUserID(int id) async {
+    try {
+      var dbClient = await database;
+      List<Map>? maps = (await dbClient?.query('users'))?.cast<Map>();
+      List<UserList> users = [];
+      if (maps!.isNotEmpty) {
+        for (int i = 0; i < maps.length; i++) {
+          if(maps[i]['id'] == id) {
+            users.add(UserList.fromMap(maps[i]));
+          }
+        }
+      }
+      return users;
+    } catch (e) {
+      print('Error getting users: $e');
+      return [];
+    }
+  }
+
   Future<void> update(KeyList keyList) async {
     try {
       var dbClient = await database;

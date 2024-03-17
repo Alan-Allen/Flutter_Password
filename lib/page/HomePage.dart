@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password/component/Button.dart';
+import 'package:password/component/pagechange.dart';
 
 import '../routes/router.dart';
 
@@ -12,6 +13,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home'),
       ),
+      drawer: CommonDrawer.getDrawer(context),
       body:  Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

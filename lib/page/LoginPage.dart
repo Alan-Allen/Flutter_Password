@@ -10,6 +10,7 @@ class LoginPage extends StatelessWidget {
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  late int id = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,13 @@ class LoginPage extends StatelessWidget {
                       _usernameController.clear();
                       _passwordController.clear();
                       bool login = await Login(userName, password);
-                      print('user: $userName, password: $password, Login?: $login');
+                      if(login) {
+                        id = await getUser(userName);
+                        print('ID: $id, user: $userName, password: $password, Login?: $login');
+
+                      } else {
+                        print('user: $userName, password: $password, Login?: $login');
+                      }
                     },
                     text: 'Login',
                     color: Colors.blue,
@@ -144,4 +151,12 @@ Future<bool> Login(String user, String password) async {
     print("Error Login user: $e");
     return false;
   }
+}
+
+Future<int> getUser(String username) async {
+  DBHelper dbHelper = DBHelper();
+  await dbHelper.initdb();
+  List<UserList> users = await dbHelper.getUser(username);
+  int id = users.isNotEmpty ? users[0].id : -1;
+  return id;
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:password/DB/DBHelper.dart';
-import 'package:password/DB/KeyList.dart';
 import 'package:password/routes/router.dart';
+
+import 'DB/UserList.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,6 +11,12 @@ void main() async {
   await dbHelper.deleteAll();
   await dbHelper.insert("1234");
   await dbHelper.insertUser('Admin', 'admin', '1234');
+  await dbHelper.insertUser('Alan', 'alan', 'Alan123');
+  List<UserList> users = await dbHelper.getAllUser();
+  print("get user data:");
+  for (var user in users) {
+    print("ID: ${user.id}, Name: ${user.name}, User: ${user.user}, Password: ${user.password}");
+  }
   runApp(const MyApp());
 }
 
