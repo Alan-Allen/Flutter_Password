@@ -5,7 +5,9 @@ import '../component/Button.dart';
 import '../routes/router.dart';
 
 class AccountPage extends StatefulWidget {
-  AccountPage({Key? key}) : super(key: key);
+  final String id;
+
+  AccountPage({Key? key, required this.id}) : super(key: key);
 
   @override
   _AccountPageState createState() => _AccountPageState();
@@ -26,9 +28,8 @@ class _AccountPageState extends State<AccountPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final Map<String, dynamic>? args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-    if (args != null && args.containsKey('ID')) {
-      ID = args['ID'];
+    ID = int.tryParse(widget.id) ?? -1;
+    if (ID != null) {
       getKeysFromDB();
     }
   }
@@ -38,6 +39,9 @@ class _AccountPageState extends State<AccountPage> {
     List<UserList> userList = await getUser(ID);
     setState(() {
       users = userList;
+      _namecontroller.text = users.first.name;
+      _usercontroller.text = users.first.user;
+      _passwordcontroller.text = users.first.password;
     });
   }
 
@@ -68,6 +72,16 @@ class _AccountPageState extends State<AccountPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 50),
+            const Center(
+              child: Text(
+                  '編輯帳號',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+              ),
+            ),
+            const SizedBox(height: 100),
             SizedBox(
               width: 500,
               child: TextField(
@@ -78,9 +92,53 @@ class _AccountPageState extends State<AccountPage> {
                   label: const Text('Name'),
                   border: OutlineInputBorder(
                     borderSide: const BorderSide(width: 3),
-                    borderRadius: BorderRadius.circular(20.0)
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 500,
+              child: TextField(
+                controller: _usercontroller,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.person_outline),
+                  hintText: 'Your UserName',
+                  label: const Text('User'),
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(width: 3),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 500,
+              child: TextField(
+                controller: _passwordcontroller,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock_outlined),
+                  hintText: 'Your Password',
+                  label: const Text('Password'),
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(width: 3),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 100),
+            Center(
+              child: CustomButton(
+                onPressed: () {
+                  print('Update Button Pressed');
+                },
+                text: 'Update',
+                color: Colors.blue,
+                textColor: Colors.white,
+                width: 30, height: 15,
               ),
             ),
           ],

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:password/page/AccountPage.dart';
 import 'package:password/page/PasswordPage.dart';
@@ -12,10 +14,21 @@ final router = GoRouter(
       path: '/',
       builder: (context, state) => const HomePage(),
     ),
-    // 修改 '/account' 路徑的路由定義，並在 'builder' 中傳遞 'ID' 參數
     GoRoute(
-      path: '/account',
-      builder: (context, state) => AccountPage(),
+      name: 'account',
+      path: '/account/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'];
+        if (id != null) {
+          return AccountPage(id: id);
+        } else {
+          return const Scaffold(
+            body: Center(
+              child: Text('ID not found'),
+            ),
+          );
+        }
+      },
     ),
     GoRoute(
       path: '/password',

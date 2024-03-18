@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:password/DB/DBHelper.dart';
 import 'package:password/component/Button.dart';
 
@@ -49,7 +50,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 Center(
                   child: SizedBox(
                     width: 500,
@@ -60,7 +61,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 50),
                 Center(
                   child: CustomButton(
                     onPressed: () async {
@@ -73,7 +74,7 @@ class LoginPage extends StatelessWidget {
                       if(login) {
                         id = await getUser(userName);
                         print('ID: $id, user: $userName, password: $password, Login?: $login');
-
+                        router.goNamed('account', pathParameters: {'id': '$id'});
                       } else {
                         print('user: $userName, password: $password, Login?: $login');
                       }
@@ -81,7 +82,7 @@ class LoginPage extends StatelessWidget {
                     text: 'Login',
                     color: Colors.blue,
                     textColor: Colors.white,
-                    width: 50, height: 10,
+                    width: 50, height: 15,
                   ),
                 ),
               ],

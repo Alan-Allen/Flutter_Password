@@ -29,7 +29,7 @@ class CommonDrawer {
           ListTile(
             title: const Text('Account'),
             onTap: () {
-              router.go('/account');
+              router.goNamed('account', pathParameters: {'id': '1'});
             },
           ),
           ListTile(
