@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:password/DB/DBHelper.dart';
 import 'package:password/component/Button.dart';
 
@@ -25,6 +24,19 @@ class LoginPage extends StatelessWidget {
           },
         ),
         title: const Text('Login Page'),
+        actions: [
+          CustomButton(
+              onPressed: () {
+                print('Sign Up button pressed');
+                router.go('/signUp');
+              },
+              text: 'Sign Up',
+              color: Colors.orange,
+              textColor: Colors.white,
+              width: 10, height: 10
+          ),
+          const SizedBox(width: 20),
+        ],
       ),
       body: Stack(
         children: [

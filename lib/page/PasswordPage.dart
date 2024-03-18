@@ -15,6 +15,7 @@ class PasswordPage extends StatefulWidget {
 class _PasswordPageState extends State<PasswordPage> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _keyController = TextEditingController();
+  final bool login = true;
 
   late List<KeyList> keys = [];
   List<String> titleList = ["ID", "Password", "Set"];
@@ -43,7 +44,7 @@ class _PasswordPageState extends State<PasswordPage> {
           icon: const Icon(Icons.home),
           onPressed: () {
             print('Back to Home');
-            router.go('/');
+            router.goNamed('/', pathParameters: {'login': '$login'});
           },
         ),
         title: const Text('Password Management'),

@@ -19,6 +19,7 @@ class _AccountPageState extends State<AccountPage> {
   final TextEditingController _passwordcontroller = TextEditingController();
   late List<UserList> users = [];
   late int ID = -1;
+  final String login = 'true';
 
   @override
   void initState() {
@@ -30,11 +31,11 @@ class _AccountPageState extends State<AccountPage> {
     super.didChangeDependencies();
     ID = int.tryParse(widget.id) ?? -1;
     if (ID != null) {
-      getKeysFromDB();
+      getUsersFromDB();
     }
   }
 
-  void getKeysFromDB() async {
+  void getUsersFromDB() async {
     print('ID: $ID');
     List<UserList> userList = await getUser(ID);
     setState(() {
@@ -61,7 +62,7 @@ class _AccountPageState extends State<AccountPage> {
           IconButton(
             onPressed: () {
               print('Refresh Button Pressed');
-              getKeysFromDB();
+              getUsersFromDB();
             },
             icon: const Icon(Icons.refresh),
           ),
@@ -81,7 +82,7 @@ class _AccountPageState extends State<AccountPage> {
                   ),
               ),
             ),
-            const SizedBox(height: 100),
+            const SizedBox(height: 20),
             SizedBox(
               width: 500,
               child: TextField(
@@ -97,7 +98,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             SizedBox(
               width: 500,
               child: TextField(
@@ -113,7 +114,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             SizedBox(
               width: 500,
               child: TextField(
@@ -129,11 +130,18 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 100),
+            const SizedBox(height: 50),
             Center(
               child: CustomButton(
                 onPressed: () {
                   print('Update Button Pressed');
+                  String name = _namecontroller.text;
+                  String user = _usercontroller.text;
+                  String password = _passwordcontroller.text;
+                  update(users.first.id, name, user, password);
+                  setState(() {
+                    getUsersFromDB();
+                  });
                 },
                 text: 'Update',
                 color: Colors.blue,
@@ -192,6 +200,7 @@ void update(int id, String name, String user, String password) async {
   await dbHelper.initdb();
   UserList users = UserList(id, name, user, password);
   await dbHelper.updateUser(users);
+  print('Update data: ID: $id, Name: $name, User: $user, Password: $password');
 }
 
 void delete(int id) async {

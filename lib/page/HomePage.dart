@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-                '密碼管理服務\nPasswordMangement',
+              '密碼管理服務\nPasswordMangement',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

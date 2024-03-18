@@ -5,8 +5,10 @@ import 'package:password/page/AccountPage.dart';
 import 'package:password/page/PasswordPage.dart';
 import 'package:password/page/RandomPage.dart';
 
+
 import '../page/HomePage.dart';
 import '../page/LoginPage.dart';
+import '../page/SignUpPage.dart';
 
 final router = GoRouter(
   routes: [
@@ -22,8 +24,17 @@ final router = GoRouter(
         if (id != null) {
           return AccountPage(id: id);
         } else {
-          return const Scaffold(
-            body: Center(
+          return Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () {
+                  print('Back to Home');
+                },
+              ),
+              title: const Text('Account Management'),
+            ),
+            body: const Center(
               child: Text('ID not found'),
             ),
           );
@@ -44,7 +55,7 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/signUp',
-      builder: (context, state) => const HomePage(),
+      builder: (context, state) => SignUpPage(),
     ),
   ],
 );

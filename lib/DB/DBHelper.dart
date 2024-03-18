@@ -216,7 +216,7 @@ class DBHelper {
       await dbClient?.transaction((txn) async {
         await txn.rawUpdate('''
           UPDATE users
-          SET name = ?, user = ?, pasword = ?
+          SET name = ?, user = ?, password = ?
           WHERE id = ?;
         ''', [userList.name, userList.user, userList.password, userList.id]);
       });
