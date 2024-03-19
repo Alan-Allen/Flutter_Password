@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:password/DB/DBHelper.dart';
 import 'package:password/component/Button.dart';
 
 import '../routes/router.dart';
@@ -49,7 +50,7 @@ class SignUpPage extends StatelessWidget {
                     child: TextField(
                       controller: _nameController,
                       decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.person_outline),
+                          prefixIcon: const Icon(Icons.drive_file_rename_outline),
                           hintText: 'Enter your username',
                           labelText: 'Username',
                           border: OutlineInputBorder(
@@ -67,7 +68,25 @@ class SignUpPage extends StatelessWidget {
                     child: TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.lock_open_outlined),
+                          prefixIcon: const Icon(Icons.person_outline),
+                          hintText: 'Enter your password',
+                          labelText: 'Password',
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 3, color: Colors.greenAccent),
+                            borderRadius: BorderRadius.circular(50.0),
+                          )
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Center(
+                  child: SizedBox(
+                    width: 500,
+                    child: TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock_outlined),
                           hintText: 'Enter your password',
                           labelText: 'Password',
                           border: OutlineInputBorder(
@@ -89,6 +108,8 @@ class SignUpPage extends StatelessWidget {
                       _usernameController.clear();
                       _passwordController.clear();
                       _nameController.clear();
+                      insert(name, userName, password);
+                      print('Name: $name, User: $userName, Password: $password');
                     },
                     text: 'Sign Up',
                     color: Colors.orange,
@@ -103,4 +124,11 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
+}
+
+void insert(String name, String user, String password) async {
+  DBHelper dbHelper = DBHelper();
+  await dbHelper.initdb();
+  await dbHelper.insertUser(name, user, password);
+  print('insert user: $name, $user, $password');
 }

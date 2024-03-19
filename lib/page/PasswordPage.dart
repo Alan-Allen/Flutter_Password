@@ -44,7 +44,7 @@ class _PasswordPageState extends State<PasswordPage> {
           icon: const Icon(Icons.home),
           onPressed: () {
             print('Back to Home');
-            router.goNamed('/', pathParameters: {'login': '$login'});
+            router.go('/');
           },
         ),
         title: const Text('Password Management'),
@@ -236,6 +236,16 @@ class _PasswordPageState extends State<PasswordPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              CustomButton(
+                                  onPressed: () {
+                                    print('MyFavorite button pressed');
+                                  },
+                                  text: 'MyFavorite',
+                                  color: Colors.redAccent,
+                                  textColor: Colors.white,
+                                  width: 20, height: 10
+                              ),
+                              const SizedBox(height: 20),
                               TextField(
                                 controller: _keyController,
                                 decoration: InputDecoration(
